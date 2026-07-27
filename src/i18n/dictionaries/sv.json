@@ -1,0 +1,76 @@
+{
+  "site": {
+    "name": "Bertil Wosk",
+    "tagline": "Hälsa · Näring · Balans"
+  },
+  "nav": {
+    "home": "Hem",
+    "about": "Om",
+    "resources": "Resurser",
+    "blog": "Blogg",
+    "contact": "Kontakt",
+    "foredrag": "Föredrag",
+    "meditationer": "Meditationer",
+    "videos": "Videos",
+    "openMenu": "Öppna meny",
+    "closeMenu": "Stäng meny"
+  },
+  "hero": {
+    "kicker": "Bertil Wosk — hälsoexpert & föreläsare",
+    "slogan": "Att leva ett liv i hälsa är att leva ett liv i balans.",
+    "cta": "Utforska"
+  },
+  "resources": {
+    "heading": "Resurser",
+    "intro": "Allt material samlat — föredrag, meditationer och videos.",
+    "foredragDesc": "PDF och presentationer från föredrag.",
+    "meditationerDesc": "Inspelade ljudfiler att lyssna på.",
+    "videosDesc": "Från Bertils YouTube-kanal.",
+    "open": "Öppna"
+  },
+  "meditations": {
+    "heading": "Meditationer",
+    "intro": "Lyssna direkt på sidan — när som helst, var som helst.",
+    "play": "Spela",
+    "pause": "Pausa",
+    "minutes": "min"
+  },
+  "blog": {
+    "heading": "Från bloggen",
+    "readMore": "Läs artikel",
+    "empty": "Inga inlägg ännu."
+  },
+  "contact": {
+    "heading": "Kontakt",
+    "name": "Namn",
+    "email": "E-post",
+    "message": "Meddelande",
+    "send": "Skicka"
+  },
+  "footer": {
+    "rights": "Bertil Wosk",
+    "navigation": "Navigering",
+    "resources": "Resurser",
+    "contact": "Kontakt",
+    "follow": "Följ mig",
+    "about": "Om Bertil Wosk",
+    "blurb": "Hälsoexpert och föreläsare. Grundare av Holistic. Här samlar jag föredrag, meditationer, videos och texter om näring, hälsa och balans."
+  },
+  "featured": {
+    "latest": "Senaste",
+    "watch": "Se video"
+  },
+  "search": {
+    "label": "Sök",
+    "placeholder": "Sök…",
+    "clear": "Rensa sökning",
+    "noResults": "Inga träffar för",
+    "resultsOne": "träff",
+    "resultsMany": "träffar"
+  },
+  "common": {
+    "download": "Ladda ner",
+    "back": "Tillbaka",
+    "readMore": "Läs mer"
+  }
+}

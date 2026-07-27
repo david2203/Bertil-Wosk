@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Design tokens — single source of truth (mirrored in tailwind.config.ts) */
+  --petrol: #1f4e5f;
+  --petrol-700: #2c5f70;
+  --ink: #16242b;
+  --muted: #5a6a70;
+  --gold: #b8862f;
+  --gold-light: #e7c879;
+  /* Page background: a very faint cool blue rather than pure white. */
+  --surface: #f7fafb;
+  --soft: #e9f1f3;
+  --sky: #dce7e5;
+  --line: rgba(31, 78, 95, 0.15);
+  --radius: 6px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  /* Sticky footer: body fills the viewport, <main> absorbs the slack so the
+     footer sits at the bottom of the screen on short pages. */
+  html,
+  body {
+    min-height: 100%;
+  }
+  body {
+    @apply bg-surface text-ink font-sans antialiased;
+    line-height: 1.7;
+    display: flex;
+    min-height: 100dvh;
+    flex-direction: column;
+  }
+  body > main {
+    flex: 1 0 auto;
+  }
+  /* The Studio renders outside <main> and manages its own height —
+     let it fill the column rather than collapsing to content height. */
+  body > div[id="sanity"],
+  body > [data-studio] {
+    flex: 1 0 auto;
+    min-height: 100dvh;
+  }
+  h1, h2, h3, h4 {
+    @apply font-serif text-ink;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  /* Visible focus for keyboard users */
+  :focus-visible {
+    outline: 2px solid var(--petrol);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
