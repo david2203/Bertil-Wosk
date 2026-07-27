@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import type { MenuPage } from "@/lib/types";
@@ -24,6 +25,7 @@ export function Nav({
 }) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLLIElement>(null);
+  const pathname = usePathname();
 
   // Close on outside click + Escape.
   useEffect(() => {
@@ -44,25 +46,45 @@ export function Nav({
   }, []);
 
   const linkClass = "text-sm text-muted hover:text-petrol transition-colors";
+  // Current page keeps the hover colour permanently.
+  const activeClass = "text-petrol";
+
+  // Compares against the pathname so the active item survives a page reload.
+  const isCurrent = (href: string) => pathname === href;
+  const resourcesActive = resourcePages.some((p) =>
+    isCurrent(pageHref(lang, p))
+  );
 
   if (mainPages.length === 0 && resourcePages.length === 0) return null;
 
   return (
     <nav aria-label="Huvudmeny">
       <ul className="flex items-center gap-6">
-        {mainPages.map((p) => (
-          <li key={p._id}>
-            <Link href={pageHref(lang, p)} className={linkClass}>
-              {p.title}
-            </Link>
-          </li>
-        ))}
+        {mainPages.map((p) => {
+          const href = pageHref(lang, p);
+          const current = isCurrent(href);
+          return (
+            <li key={p._id}>
+              <Link
+                href={href}
+                aria-current={current ? "page" : undefined}
+                className={cn(linkClass, current && activeClass)}
+              >
+                {p.title}
+              </Link>
+            </li>
+          );
+        })}
 
         {resourcePages.length > 0 ? (
           <li ref={wrapRef} className="relative">
             <button
               type="button"
-              className={cn(linkClass, "inline-flex items-center gap-1")}
+              className={cn(
+                linkClass,
+                "inline-flex items-center gap-1",
+                resourcesActive && activeClass
+              )}
               aria-expanded={open}
               aria-controls="resurser-menu"
               aria-haspopup="true"
@@ -85,17 +107,25 @@ export function Nav({
                 open ? "block" : "hidden"
               )}
             >
-              {resourcePages.map((p) => (
-                <li key={p._id}>
-                  <Link
-                    href={pageHref(lang, p)}
-                    className="block rounded px-3 py-2 text-sm text-ink hover:bg-soft"
-                    onClick={() => setOpen(false)}
-                  >
-                    {p.title}
-                  </Link>
-                </li>
-              ))}
+              {resourcePages.map((p) => {
+                const href = pageHref(lang, p);
+                const current = isCurrent(href);
+                return (
+                  <li key={p._id}>
+                    <Link
+                      href={href}
+                      aria-current={current ? "page" : undefined}
+                      className={cn(
+                        "block rounded px-3 py-2 text-sm hover:bg-soft",
+                        current ? "bg-soft font-medium text-petrol" : "text-ink"
+                      )}
+                      onClick={() => setOpen(false)}
+                    >
+                      {p.title}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </li>
         ) : null}
