@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Newsreader } from "next/font/google";
+import { sanityFetch } from "@/lib/sanity.fetch";
+import { siteSettingsQuery } from "@/lib/queries";
+import { urlForImage } from "@/lib/sanity.image";
+import { getSiteUrl } from "@/lib/siteUrl";
+import type { SanityImage } from "@/lib/types";
 import "./globals.css";
 
 const sans = Inter({
@@ -14,30 +19,69 @@ const serif = Newsreader({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://www.bertilwosk.se"),
-  title: {
-    // 51 characters — fits before Google truncates (~60).
-    default: "Bertil Wosk – om näring, hälsa och ett liv i balans",
-    // Sub-pages get "Sidans titel · Bertil Wosk".
-    template: "%s · Bertil Wosk",
-  },
-  // 150 characters — within the ~160 Google displays.
-  description:
-    "Att leva ett liv i hälsa är att leva ett liv i balans. Bertil Wosk, grundare av Holistic, delar föredrag, meditationer och texter om näring och hälsa.",
-  openGraph: {
-    type: "website",
-    locale: "sv_SE",
-    siteName: "Bertil Wosk",
-    url: "https://www.bertilwosk.se",
-    title: "Bertil Wosk – om näring, hälsa och ett liv i balans",
-    description:
-      "Att leva ett liv i hälsa är att leva ett liv i balans. Bertil Wosk, grundare av Holistic, delar föredrag, meditationer och texter om näring och hälsa.",
-  },
-  twitter: {
-    card: "summary_large_image",
-  },
+// Defaults, used when Webbplatsinställningar → SEO is left empty.
+// 51 characters — fits before Google truncates (~60).
+const DEFAULT_TITLE = "Bertil Wosk – om näring, hälsa och ett liv i balans";
+// 150 characters — within the ~160 Google displays.
+const DEFAULT_DESCRIPTION =
+  "Att leva ett liv i hälsa är att leva ett liv i balans. Bertil Wosk, grundare av Holistic, delar föredrag, meditationer och texter om näring och hälsa.";
+
+type Settings = {
+  title?: string;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    ogImage?: SanityImage;
+  };
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await sanityFetch<Settings | null>(
+    siteSettingsQuery,
+    {},
+    null
+  );
+
+  const title = settings?.seo?.metaTitle || DEFAULT_TITLE;
+  const description = settings?.seo?.metaDescription || DEFAULT_DESCRIPTION;
+  const siteUrl = getSiteUrl();
+
+  // Facebook/LinkedIn need an absolute URL and explicit dimensions.
+  const ogImage = settings?.seo?.ogImage
+    ? urlForImage(settings.seo.ogImage)
+        .width(1200)
+        .height(630)
+        .fit("crop")
+        .url()
+    : undefined;
+
+  return {
+    metadataBase: new URL(siteUrl),
+    title: {
+      default: title,
+      // Sub-pages get "Sidans titel · Bertil Wosk".
+      template: `%s · ${settings?.title || "Bertil Wosk"}`,
+    },
+    description,
+    openGraph: {
+      type: "website",
+      locale: "sv_SE",
+      siteName: settings?.title || "Bertil Wosk",
+      url: siteUrl,
+      title,
+      description,
+      ...(ogImage
+        ? { images: [{ url: ogImage, width: 1200, height: 630, alt: title }] }
+        : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      ...(ogImage ? { images: [ogImage] } : {}),
+    },
+  };
+}
 
 // NOTE: <html lang> is hardcoded to "sv" while the site is Swedish-only.
 // When English is enabled, move <html>/<body> into app/[lang]/layout.tsx so

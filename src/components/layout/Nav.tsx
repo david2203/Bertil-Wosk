@@ -45,6 +45,11 @@ export function Nav({
     };
   }, []);
 
+  // Safety net: always close once the route has actually changed.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   const linkClass = "text-sm text-muted hover:text-petrol transition-colors";
   // Current page keeps the hover colour permanently.
   const activeClass = "text-petrol";
@@ -119,6 +124,10 @@ export function Nav({
                         "block rounded px-3 py-2 text-sm hover:bg-soft",
                         current ? "bg-soft font-medium text-petrol" : "text-ink"
                       )}
+                      // pointerdown fires before PageTransition's capture-phase
+                      // click handler, which stops propagation — an onClick
+                      // here would never run during a page transition.
+                      onPointerDown={() => setOpen(false)}
                       onClick={() => setOpen(false)}
                     >
                       {p.title}

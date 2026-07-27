@@ -159,6 +159,7 @@ export const sitemapQuery = `
 export const siteSettingsQuery = `
   *[_type == "siteSettings"][0]{
     title, contactEmail, footerText, social,
+    seo{ metaTitle, metaDescription, ogImage },
     privacyPage->{ _id, title, "slug": slug.current, placement },
     disclaimerPage->{ _id, title, "slug": slug.current, placement }
   }
