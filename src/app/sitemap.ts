@@ -12,14 +12,13 @@ type SitemapData = {
   pages: { slug: string; placement?: string; _updatedAt?: string }[];
   posts: { slug: string; _updatedAt?: string }[];
   foredrag: { slug: string; _updatedAt?: string }[];
-  hasResources: boolean;
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const data = await sanityFetch<SitemapData>(
     sitemapQuery,
     {},
-    { pages: [], posts: [], foredrag: [], hasResources: false }
+    { pages: [], posts: [], foredrag: [] }
   );
 
   const entries: MetadataRoute.Sitemap = [];
@@ -35,14 +34,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 1,
     });
-
-    if (data.hasResources) {
-      entries.push({
-        url: `${root}/resurser`,
-        changeFrequency: "weekly",
-        priority: 0.8,
-      });
-    }
 
     for (const page of data.pages) {
       if (page.placement === "home" || !page.slug) continue;

@@ -1,6 +1,6 @@
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { localePath } from "@/lib/routes";
+
 import { sanityFetch } from "@/lib/sanity.fetch";
 import { homePageQuery } from "@/lib/queries";
 import type { Page } from "@/lib/types";
@@ -18,13 +18,13 @@ export default async function HomePage({
   const dict = await getDictionary(lang);
   const page = await sanityFetch<Page | null>(homePageQuery, {}, null);
 
+  // Placeholder until a start page exists in Sanity. No CTA, since there
+  // is no guaranteed destination before any pages are created.
   if (!page) {
     return (
       <Hero
         kicker={dict.hero.kicker}
         slogan={dict.hero.slogan}
-        ctaLabel={dict.hero.cta}
-        ctaHref={localePath(lang, "/resurser")}
       />
     );
   }

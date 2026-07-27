@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { MenuPage } from "@/lib/types";
-import { localePath, pageHref } from "@/lib/routes";
+import { pageHref } from "@/lib/routes";
 import { Container } from "@/components/ui/Container";
 import { SocialLinks, type SocialLink } from "./SocialLinks";
 
@@ -82,14 +82,6 @@ export function Footer({
                     </Link>
                   </li>
                 ))}
-                <li>
-                  <Link
-                    href={localePath(lang, "/resurser")}
-                    className={linkClass}
-                  >
-                    {dict.footer.resources} →
-                  </Link>
-                </li>
               </ul>
             </nav>
           ) : null}

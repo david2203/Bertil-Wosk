@@ -141,22 +141,6 @@ export const mainMenuPagesQuery = `
     }
 `;
 
-// Everything under Resurser (for the /resurser index page).
-// `sources` / `itemCount` let a card say "18 meditationer" by looking at the
-// collection blocks the page actually contains.
-const RESOURCE_CARD_FIELDS = `
-  _id, title, "slug": slug.current, intro, placement,
-  "sources": sections[_type == "collectionBlock"].source,
-  "itemCount": count(*[_type in ^.sections[_type == "collectionBlock"].source])
-`;
-
-export const allResourcePagesQuery = `
-  *[_type == "page" && placement == "resources" && defined(slug.current)]
-    | order(coalesce(menuOrder, 99) asc){
-      ${RESOURCE_CARD_FIELDS}
-    }
-`;
-
 // Everything that should appear in sitemap.xml, with modification dates.
 export const sitemapQuery = `
 {
@@ -168,8 +152,7 @@ export const sitemapQuery = `
   },
   "foredrag": *[_type == "foredrag" && defined(slug.current)]{
     "slug": slug.current, _updatedAt
-  },
-  "hasResources": count(*[_type == "page" && placement == "resources"]) > 0
+  }
 }
 `;
 

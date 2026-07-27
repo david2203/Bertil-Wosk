@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import type { MenuPage } from "@/lib/types";
-import { localePath, pageHref } from "@/lib/routes";
+import { pageHref } from "@/lib/routes";
 import { cn } from "@/lib/cn";
 
 // Every entry comes from Sanity: pages with "Visa i menyn" ticked.
@@ -96,15 +96,6 @@ export function Nav({
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link
-                  href={localePath(lang, "/resurser")}
-                  className="block rounded px-3 py-2 text-sm text-muted hover:bg-soft"
-                  onClick={() => setOpen(false)}
-                >
-                  {resourcesLabel} →
-                </Link>
-              </li>
             </ul>
           </li>
         ) : null}
