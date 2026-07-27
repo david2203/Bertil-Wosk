@@ -30,6 +30,7 @@ stubs awaiting real copy and media from the client.
 | Language       | TypeScript                      | Safety on a long-lived project |
 | Styling        | Tailwind CSS + CSS variables    | Tokens in one place, fast, consistent |
 | Animation      | GSAP                            | Height/motion transitions CSS can't do (e.g. FAQ accordion) |
+| Smooth scroll  | Lenis                           | Eased page scrolling; mounted in `[lang]` layout only |
 | CMS            | Sanity v6 + next-sanity 13      | Free tier, friendly editor, native file (PDF/PPT/MP3) handling, embedded Studio at `/studio` |
 
 > Versions are kept at the current latest, verified to resolve together:
@@ -259,6 +260,24 @@ Keep field names stable — front-end GROQ queries in `src/lib/queries.ts` depen
 
 `TextImageSection` keeps text before image in the DOM always; `imageFirst` only
 flips the desktop order via `md:flex-row-reverse`, so mobile always reads text first.
+
+`SmoothScroll` (Lenis) is mounted in `app/[lang]/layout.tsx` — **not** the root
+layout — so `/studio` keeps native scrolling; Sanity Studio breaks under it.
+Lenis's own stylesheet is inlined in `globals.css` **minus** its
+`.lenis.lenis-smooth iframe { pointer-events: none }` rule, which would make
+the YouTube and Spotify embeds unclickable. Add `data-lenis-prevent` to any
+element that needs its own native scroll. Disabled under `prefers-reduced-motion`.
+
+`PageTransition` wraps `{children}` inside `<main>` and cross-fades routes
+(0.35s each way, opacity only). It intercepts internal link clicks **in the
+capture phase** — React delegates events at the app root, below `document`,
+so a bubble listener would fire after `next/link` had already navigated.
+It calls `preventDefault` + `stopPropagation`, fades out, then `router.push`.
+
+Left alone: `#anchors` (Lenis handles those), external/`mailto:`/`tel:` links,
+`target="_blank"`, `download`, `/studio`, modified clicks, and same-page links.
+Add `data-no-transition` to opt an anchor out. Sets no CSS opacity, so the
+site renders without JavaScript, and no-ops under `prefers-reduced-motion`.
 
 `FaqAccordion` is the one animated component. It keeps native
 `<details>`/`<summary>` for keyboard support and no-JS fallback, but intercepts

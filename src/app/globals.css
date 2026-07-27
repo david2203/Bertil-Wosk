@@ -35,6 +35,14 @@
     min-height: 100dvh;
     flex-direction: column;
   }
+  /* The page-transition wrapper holds <main> and the footer, so it becomes
+     the growing flex item; <main> then absorbs the slack inside it. */
+  body > [data-page-transition] {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+  }
+  body > [data-page-transition] > main,
   body > main {
     flex: 1 0 auto;
   }
@@ -60,6 +68,31 @@
     outline-offset: 2px;
     border-radius: 2px;
   }
+}
+
+/* Lenis smooth scrolling.
+   Adapted from the library's stylesheet — deliberately WITHOUT its
+   `.lenis.lenis-smooth iframe { pointer-events: none }` rule, which would
+   make the YouTube and Spotify embeds unclickable. Put `data-lenis-prevent`
+   on any element that needs its own native scrolling. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-autoToggle {
+  transition-property: overflow;
+  transition-duration: 1ms;
+  transition-behavior: allow-discrete;
 }
 
 @media (prefers-reduced-motion: reduce) {

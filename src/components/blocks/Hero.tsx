@@ -2,8 +2,8 @@ import Image from "next/image";
 import type { SanityImage } from "@/lib/types";
 import { urlForImage } from "@/lib/sanity.image";
 import { Container } from "@/components/ui/Container";
-import { Kicker } from "@/components/ui/Kicker";
 import { Button } from "@/components/ui/Button";
+import { HeroText } from "./HeroText";
 
 // Static fallback hero photo at /public/hero-bg.webp.
 // A Sanity `image` (e.g. siteSettings.heroImage) overrides it when provided.
@@ -55,12 +55,7 @@ export function Hero({
 
       <Container className="relative flex min-h-[480px] flex-col justify-center py-20">
         <div className="max-w-xl">
-          {kicker ? (
-            <Kicker className="text-gold-light">{kicker}</Kicker>
-          ) : null}
-          <h1 className="mt-4 text-4xl leading-tight text-white drop-shadow-sm md:text-5xl">
-            {slogan}
-          </h1>
+          <HeroText kicker={kicker} heading={slogan} />
           {ctaLabel && ctaHref ? (
             <div className="mt-8">
               <Button href={ctaHref}>{ctaLabel}</Button>

@@ -10,6 +10,8 @@ import {
 import type { MenuPage } from "@/lib/types";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { PageTransition } from "@/components/layout/PageTransition";
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -40,24 +42,30 @@ export default async function LangLayout({
 
   return (
     <>
+      <SmoothScroll />
       <Header
         lang={lang}
         dict={dict}
         resourcePages={resourcePages}
         mainPages={mainPages}
       />
-      <main id="main">{children}</main>
-      <Footer
-        lang={lang}
-        dict={dict}
-        contactEmail={settings?.contactEmail}
-        mainPages={mainPages}
-        resourcePages={resourcePages}
-        social={settings?.social}
-        privacyPage={settings?.privacyPage}
-        disclaimerPage={settings?.disclaimerPage}
-        footerText={settings?.footerText}
-      />
+      {/* Footer sits inside the transition so it cross-fades with the page */}
+      <PageTransition>
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <Footer
+          lang={lang}
+          dict={dict}
+          contactEmail={settings?.contactEmail}
+          mainPages={mainPages}
+          resourcePages={resourcePages}
+          social={settings?.social}
+          privacyPage={settings?.privacyPage}
+          disclaimerPage={settings?.disclaimerPage}
+          footerText={settings?.footerText}
+        />
+      </PageTransition>
     </>
   );
 }
