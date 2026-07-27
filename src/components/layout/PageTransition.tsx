@@ -13,6 +13,14 @@ const DURATION = 0.35;
 const EASE = "power2.inOut";
 
 /**
+ * Fired the moment a transition begins. Because the click is intercepted in
+ * the capture phase with `stopPropagation`, React `onClick` handlers on the
+ * link never run — so UI that needs to react (the Resurser dropdown) listens
+ * for this instead.
+ */
+export const ROUTE_TRANSITION_START = "route-transition-start";
+
+/**
  * Cross-fade between routes.
  *
  * Internal link clicks are intercepted: the current page fades out, and only
@@ -104,6 +112,8 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
 
       if (navigating.current) return;
       navigating.current = true;
+
+      document.dispatchEvent(new CustomEvent(ROUTE_TRANSITION_START));
 
       const el = ref.current;
       const go = () => router.push(url.pathname + url.search);

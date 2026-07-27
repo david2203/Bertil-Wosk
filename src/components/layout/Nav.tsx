@@ -7,6 +7,7 @@ import type { Locale } from "@/i18n/config";
 import type { MenuPage } from "@/lib/types";
 import { pageHref } from "@/lib/routes";
 import { cn } from "@/lib/cn";
+import { ROUTE_TRANSITION_START } from "./PageTransition";
 
 // Every entry comes from Sanity: pages with "Visa i menyn" ticked.
 // Pages placed under Resurser are grouped into the dropdown; everything
@@ -45,7 +46,15 @@ export function Nav({
     };
   }, []);
 
-  // Safety net: always close once the route has actually changed.
+  // Close as soon as a page transition begins. Doing this on the link's own
+  // pointerdown would hide it before the click landed, making it unclickable.
+  useEffect(() => {
+    const close = () => setOpen(false);
+    document.addEventListener(ROUTE_TRANSITION_START, close);
+    return () => document.removeEventListener(ROUTE_TRANSITION_START, close);
+  }, []);
+
+  // Safety net: also close once the route has actually changed.
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
@@ -124,10 +133,6 @@ export function Nav({
                         "block rounded px-3 py-2 text-sm hover:bg-soft",
                         current ? "bg-soft font-medium text-petrol" : "text-ink"
                       )}
-                      // pointerdown fires before PageTransition's capture-phase
-                      // click handler, which stops propagation — an onClick
-                      // here would never run during a page transition.
-                      onPointerDown={() => setOpen(false)}
                       onClick={() => setOpen(false)}
                     >
                       {p.title}
